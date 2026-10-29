@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The World of Professions · Crossword</title>
+<style>
+:root{--bg:#FFF6E5;--card:#FFFFFF;--ink:#25324B;--muted:#5F6B85;--coral:#FF6B6B;--orange:#FF9F43;--sun:#FFD93D;--mint:#2ECC9A;--teal:#12B5B0;--blue:#3D8BFD;--purple:#8B5CF6;--line:#C9D6EE;--ok:#BFF0D8;--bad:#FFC9C9;--cs:34px}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:"Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;line-height:1.45;background:radial-gradient(circle at 8% 0%,#FFE3E3 0,transparent 38%),radial-gradient(circle at 95% 4%,#DCEBFF 0,transparent 36%),radial-gradient(circle at 50% 100%,#E3F9EE 0,transparent 40%),var(--bg);background-attachment:fixed}
+.wrap{max-width:1280px;margin:0 auto;padding:28px 18px 40px}
+header{text-align:center;padding:12px 0 22px}
+.tag{display:inline-block;font-size:.76rem;letter-spacing:.18em;color:var(--ink);font-weight:700;background:var(--sun);padding:6px 16px;border-radius:999px;box-shadow:0 3px 0 #E8B800}
+h1{font-family:Georgia,"Times New Roman",serif;font-weight:700;letter-spacing:.05em;font-size:clamp(1.8rem,5vw,3.1rem);margin:.4em 0 .2em;color:var(--purple);background:linear-gradient(90deg,var(--coral),var(--orange) 25%,var(--mint) 55%,var(--blue) 80%,var(--purple));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--muted);font-family:Georgia,serif;font-style:italic;margin:0}
+.rule{width:140px;height:5px;background:linear-gradient(90deg,var(--coral),var(--sun),var(--mint),var(--blue),var(--purple));margin:18px auto 0;border-radius:5px}
+.bar{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;justify-content:space-between;background:var(--card);border:2px solid #FFE0A3;border-radius:18px;padding:12px 16px;box-shadow:0 6px 18px #ff9f4326}
+.prog{flex:1 1 220px}.prog b{font-size:.95rem}
+.track{height:12px;background:#EEF1FA;border-radius:12px;margin-top:6px;overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--teal),var(--blue));border-radius:12px;transition:width .4s ease}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;font-size:.92rem;font-weight:700;cursor:pointer;border-radius:12px;padding:10px 18px;border:0;color:var(--ink);background:#EEF1FA;box-shadow:0 3px 0 #C9D2E8;transition:transform .15s,box-shadow .15s,filter .15s}
+button:hover{filter:brightness(1.05);transform:translateY(-1px)}button:active{transform:translateY(2px);box-shadow:0 1px 0 #C9D2E8}
+#bCheck{background:var(--mint);box-shadow:0 3px 0 #1BA97B}
+#bReveal{background:var(--sun);box-shadow:0 3px 0 #E8B800}
+#bReset{background:#FF9AAE;box-shadow:0 3px 0 #E5708A}
+button.pri{background:var(--purple);color:#fff;box-shadow:0 3px 0 #6D3FD6}
+.msg{min-height:1.6em;margin:14px 2px 4px;text-align:center;color:var(--ink);font-weight:600}
+.main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(300px,1fr);gap:20px;align-items:start}
+.gridbox{background:var(--card);border:2px solid #CFE2FF;border-radius:20px;padding:16px;overflow:auto;max-height:78vh;box-shadow:0 6px 18px #3d8bfd22}
+#grid{display:grid;width:max-content;margin:0 auto;gap:2px;touch-action:manipulation}
+.cell{position:relative;width:var(--cs);height:var(--cs)}
+.cell input{width:100%;height:100%;border:2px solid var(--line);border-radius:7px;background:#fff;text-align:center;text-transform:uppercase;font:700 calc(var(--cs)*.5) "Segoe UI",system-ui,sans-serif;color:var(--ink);padding:0;caret-color:transparent;outline:none;cursor:pointer;transition:background .15s,transform .15s}
+.cell.inw input{background:#DCEBFF;border-color:var(--blue)}
+.cell.cur input{background:#FFE066;border-color:var(--orange);box-shadow:0 0 0 3px #ff9f4355;transform:scale(1.06);position:relative;z-index:1}
+.cell.ok input{background:var(--ok);border-color:var(--mint)}.cell.bad input{background:var(--bad);border-color:var(--coral);color:#B3262E}
+.cell i{position:absolute;top:1px;left:3px;font:700 calc(var(--cs)*.27)/1 system-ui,sans-serif;color:var(--coral);pointer-events:none;font-style:normal;z-index:2}
+.clues{background:var(--card);border:2px solid #FFD0D0;border-radius:20px;padding:6px 18px 14px;max-height:78vh;overflow:auto;box-shadow:0 6px 18px #ff6b6b22}
+.clues h2{font-family:Georgia,serif;font-weight:700;font-size:1.1rem;letter-spacing:.18em;margin:16px 0 6px;border-bottom:3px solid currentColor;padding-bottom:6px}
+.clues h2:first-child{color:var(--blue)}.clues h2:nth-of-type(2){color:var(--coral)}
+.clues ol{list-style:none;margin:0;padding:0}
+.clues li{display:flex;gap:10px;padding:8px 10px;border-radius:12px;cursor:pointer;font-size:.94rem;transition:.15s}
+.clues li:hover{background:#FFF3D6}.clues li.on{background:#FFEFB0;box-shadow:inset 4px 0 0 var(--orange)}
+.n{flex:none;min-width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.8rem}
+#across .n{background:#DCEBFF;color:#1F5FC9}#down .n{background:#FFE0E0;color:#C2323A}
+.clues li.done .n{background:var(--mint);color:var(--ink)}
+.len{color:var(--muted);white-space:nowrap;font-weight:600}
+dialog{border:3px solid var(--sun);border-radius:22px;background:var(--card);color:var(--ink);padding:26px 28px;max-width:min(420px,92vw);text-align:center;box-shadow:0 14px 44px #8b5cf655}
+dialog::backdrop{background:#25324B80}dialog h3{font-family:Georgia,serif;font-weight:700;font-size:1.5rem;margin:0 0 8px;color:var(--purple)}
+dialog .btns{justify-content:center;margin-top:18px}
+.err{background:var(--bad);border-radius:10px;padding:10px;margin:10px 0;text-align:center}
+@media(max-width:900px){.main{grid-template-columns:1fr}.gridbox,.clues{max-height:none}.clues{order:2}:root{--cs:30px}.wrap{padding:16px 10px 30px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="tag">ENGLISH VOCABULARY · LEVEL B1</div>
+<h1>THE WORLD OF PROFESSIONS</h1>
+<p class="sub">“Read the clues, discover the professions, and complete the crossword.”</p>
+<div class="rule"></div>
+</header>
+<div class="bar">
+<div class="prog"><b id="ptxt">Progress: 0 / 25</b><div class="track"><div class="fill" id="pfill"></div></div></div>
+<div class="btns">
+<button class="pri" id="bCheck">Check Answers</button>
+<button id="bReveal">Reveal Answers</button>
+<button id="bReset">Start Again</button>
+</div>
+</div>
+<div class="msg" id="msg" role="status" aria-live="polite"></div>
+<div class="main">
+<div class="gridbox"><div id="grid" aria-label="Crossword grid"></div></div>
+<aside class="clues"><h2>ACROSS</h2><ol id="across"></ol><h2>DOWN</h2><ol id="down"></ol></aside>
+</div>
+</div>
+<dialog id="dlg"><h3 id="dT"></h3><p id="dP"></p><div class="btns" id="dB"></div></dialog>
+
+<script>
+/* ---------- DATA ---------- */
+// [answer, row, col, direction]  — layout generated and validated by a search algorithm
+const LAYOUT = [["ADMINISTRATIVE ASSISTANT", 14, 2, "A"], ["MODEL", 14, 4, "D"], ["SALESPERSON", 6, 18, "D"], ["DENTIST", 17, 3, "A"], ["WAITER", 10, 15, "D"], ["TEACHER", 9, 17, "A"], ["COOK", 9, 20, "D"], ["FLIGHT ATTENDANT", 9, 9, "D"], ["SOCCER PLAYER", 21, 1, "A"], ["ACTOR", 12, 24, "D"], ["JOURNALIST", 9, 11, "D"], ["VETERINARIAN", 7, 8, "A"], ["RECEPTIONIST", 6, 6, "D"], ["MUSICIAN", 9, 13, "D"], ["SOLDIER", 6, 0, "A"], ["FACTORY WORKER", 23, 6, "A"], ["MANAGER", 16, 16, "A"], ["LAWYER", 4, 23, "D"], ["PILOT", 3, 10, "D"], ["HAIR STYLIST", 13, 22, "D"], ["ENGINEER", 0, 12, "D"], ["DOCTOR", 19, 3, "D"], ["CONSTRUCTION WORKER", 4, 1, "A"], ["POLICE OFFICER", 0, 1, "D"], ["NURSE", 0, 17, "D"]];
+const CLUES = {
+"ADMINISTRATIVE ASSISTANT":"This person organizes schedules, prepares documents, and helps an office run smoothly.",
+"COOK":"This person prepares meals in a restaurant or another kitchen.",
+"CONSTRUCTION WORKER":"This person helps build or repair houses, roads, and other structures.",
+"DENTIST":"This professional examines teeth and helps people maintain good oral health.",
+"DOCTOR":"This professional diagnoses illnesses and treats people who are sick.",
+"ENGINEER":"This professional uses science and mathematics to design or improve machines, systems, or structures.",
+"FACTORY WORKER":"This person helps make products in an industrial building.",
+"FLIGHT ATTENDANT":"This person looks after passengers and explains safety procedures on an aircraft.",
+"RECEPTIONIST":"This person welcomes visitors, answers phone calls, and directs people to the right place.",
+"HAIR STYLIST":"This professional cuts, colors, and styles people’s hair.",
+"JOURNALIST":"This person investigates events, interviews people, and reports news to the public.",
+"LAWYER":"This professional advises and represents people in legal matters.",
+"MANAGER":"This person leads a team and helps an organization achieve its goals.",
+"MUSICIAN":"This person performs, writes, or creates music, often using an instrument or their voice.",
+"NURSE":"This professional cares for patients and supports their treatment and recovery.",
+"PILOT":"This person operates an aircraft and is responsible for its safe flight.",
+"POLICE OFFICER":"This person enforces the law and helps protect people in the community.",
+"SALESPERSON":"This person helps customers choose products and sells goods or services.",
+"SOCCER PLAYER":"This athlete plays a team sport in which players try to score goals by kicking a ball.",
+"SOLDIER":"This person serves in the armed forces and receives military training.",
+"TEACHER":"This professional helps students learn skills and understand different subjects.",
+"VETERINARIAN":"This professional examines and treats animals when they are sick or injured.",
+"WAITER":"This person takes orders and serves food and drinks in a restaurant.",
+"ACTOR":"This performer plays a character in a film, television show, or play.",
+"MODEL":"This professional presents clothing or products in photographs, advertisements, or fashion shows."
+};
+
+/* ---------- BUILD MODEL + VALIDATE ---------- */
+const $ = id => document.getElementById(id);
+const words = LAYOUT.map(([a,r,c,d]) => ({ans:a, w:a.replace(/ /g,""), r, c, d, cells:[], num:0}));
+const sol = new Map(); // "r,c" -> letter
+let ROWS = 0, COLS = 0, problems = [];
+words.forEach(o => {
+  for (let i = 0; i < o.w.length; i++) {
+    const r = o.r + (o.d === "D" ? i : 0), c = o.c + (o.d === "A" ? i : 0), k = r + "," + c;
+    if (sol.has(k) && sol.get(k) !== o.w[i]) problems.push("Collision in " + o.ans);
+    sol.set(k, o.w[i]); o.cells.push(k); ROWS = Math.max(ROWS, r + 1); COLS = Math.max(COLS, c + 1);
+  }
+});
+(function validate(){
+  if (words.length !== 25 || new Set(words.map(w => w.ans)).size !== 25) problems.push("Expected 25 unique answers");
+  words.forEach(w => { if (!CLUES[w.ans]) problems.push("Missing clue: " + w.ans); });
+  // every maximal run of 2+ letters must be a listed word
+  const listed = new Set(words.map(w => w.d + w.cells[0]));
+  for (const k of sol.keys()) {
+    const [r, c] = k.split(",").map(Number);
+    [["A",0,1],["D",1,0]].forEach(([d,dr,dc]) => {
+      if (sol.has((r-dr)+","+(c-dc)) || !sol.has((r+dr)+","+(c+dc))) return;
+      if (!listed.has(d + k)) problems.push("Unlisted run at " + k);
+    });
+  }
+  // connectivity
+  const seen = new Set(), st = [words[0].cells[0]];
+  while (st.length) { const k = st.pop(); if (seen.has(k)) continue; seen.add(k);
+    const [r, c] = k.split(",").map(Number);
+    [[1,0],[-1,0],[0,1],[0,-1]].forEach(([a,b]) => { const n = (r+a)+","+(c+b); if (sol.has(n) && !seen.has(n)) st.push(n); }); }
+  if (seen.size !== sol.size) problems.push("Grid is not connected");
+})();
+if (problems.length) { document.querySelector(".wrap").insertAdjacentHTML("afterbegin", '<div class="err">Grid validation failed: ' + problems.join("; ") + "</div>"); console.error(problems); }
+
+// numbering (row-major, standard convention)
+let n = 0;
+for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+  const here = words.filter(w => w.r === r && w.c === c);
+  if (here.length) { n++; here.forEach(w => w.num = n); }
+}
+
+/* ---------- RENDER ---------- */
+const gridEl = $("grid"), inputs = new Map(), cellEls = new Map();
+gridEl.style.gridTemplateColumns = "repeat(" + COLS + ", var(--cs))";
+const starts = new Map(); words.forEach(w => starts.set(w.cells[0], w.num));
+for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+  const k = r + "," + c, cell = document.createElement("div");
+  cell.className = "cell";
+  if (!sol.has(k)) { cell.style.visibility = "hidden"; gridEl.appendChild(cell); continue; }
+  const inp = document.createElement("input");
+  inp.maxLength = 2; inp.autocomplete = "off"; inp.autocapitalize = "characters"; inp.spellcheck = false;
+  inp.setAttribute("aria-label", "Row " + (r+1) + ", column " + (c+1));
+  inp.dataset.k = k; cell.appendChild(inp);
+  if (starts.has(k)) cell.insertAdjacentHTML("afterbegin", "<i>" + starts.get(k) + "</i>");
+  gridEl.appendChild(cell); inputs.set(k, inp); cellEls.set(k, cell);
+}
+const lens = w => "(" + w.ans.split(" ").map(s => s.length).join(", ") + ")";
+const liEls = new Map();
+["A","D"].forEach(d => {
+  words.filter(w => w.d === d).sort((a,b) => a.num - b.num).forEach(w => {
+    const li = document.createElement("li");
+    li.innerHTML = '<span class="n">' + w.num + '</span><span>' + CLUES[w.ans] + ' <span class="len">' + lens(w) + '</span></span>';
+    li.onclick = () => selectWord(w, true);
+    $(d === "A" ? "across" : "down").appendChild(li); liEls.set(w, li);
+  });
+});
+
+/* ---------- STATE / INTERACTION ---------- */
+let active = null, cursor = null, checked = false;
+const wordsAt = k => words.filter(w => w.cells.includes(k));
+function selectWord(w, focusStart) {
+  active = w;
+  if (focusStart) cursor = w.cells.find(k => !inputs.get(k).value) || w.cells[0];
+  paint(); inputs.get(cursor).focus({preventScroll:false});
+  liEls.get(w).scrollIntoView({block:"nearest"});
+}
+function paint() {
+  cellEls.forEach((el, k) => { el.classList.toggle("inw", !!active && active.cells.includes(k)); el.classList.toggle("cur", k === cursor); });
+  liEls.forEach((li, w) => { li.classList.toggle("on", w === active); li.classList.toggle("done", w.cells.every(k => inputs.get(k).value)); });
+}
+function progress() {
+  const done = words.filter(w => w.cells.every(k => inputs.get(k).value)).length;
+  $("ptxt").textContent = "Progress: " + done + " / 25"; $("pfill").style.width = (done / 25 * 100) + "%"; paint();
+}
+function clearMarks() { cellEls.forEach(el => el.classList.remove("ok", "bad")); checked = false; }
+function move(step) {
+  if (!active) return; const i = active.cells.indexOf(cursor), j = Math.min(Math.max(i + step, 0), active.cells.length - 1);
+  cursor = active.cells[j]; paint(); inputs.get(cursor).focus();
+}
+function arrow(dr, dc) {
+  const [r, c] = cursor.split(",").map(Number);
+  let nr = r + dr, nc = c + dc;
+  while (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS && !sol.has(nr + "," + nc)) { nr += dr; nc += dc; } // skip gaps
+  const k = nr + "," + nc; if (!sol.has(k)) return;
+  const dir = dr ? "D" : "A", ws = wordsAt(k);
+  active = ws.find(w => w.d === dir) || ws.find(w => w === active) || ws[0];
+  cursor = k; paint(); inputs.get(k).focus();
+}
+function setLetter(ch) {
+  inputs.get(cursor).value = ch; clearMarks(); progress();
+  if (active.cells.indexOf(cursor) < active.cells.length - 1) move(1);
+}
+inputs.forEach((inp, k) => {
+  inp.addEventListener("focus", () => { if (cursor !== k || !active || !active.cells.includes(k)) { cursor = k; const ws = wordsAt(k); if (!active || !active.cells.includes(k)) active = ws[0]; paint(); } inp.select(); });
+  inp.addEventListener("click", () => {
+    const ws = wordsAt(k);
+    if (ws.length > 1 && cursor === k && active && active.cells.includes(k)) active = ws.find(w => w !== active);
+    else if (!active || !active.cells.includes(k)) active = ws[0];
+    cursor = k; paint(); inp.select();
+  });
+  inp.addEventListener("keydown", e => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const K = e.key;
+    if (/^[a-zA-Z]$/.test(K)) { e.preventDefault(); setLetter(K.toUpperCase()); }
+    else if (K === "Backspace") { e.preventDefault(); if (inp.value) { inp.value = ""; clearMarks(); progress(); } else { move(-1); inputs.get(cursor).value = ""; clearMarks(); progress(); } }
+    else if (K === "Delete") { e.preventDefault(); inp.value = ""; clearMarks(); progress(); }
+    else if (K === "ArrowRight") { e.preventDefault(); arrow(0, 1); }
+    else if (K === "ArrowLeft") { e.preventDefault(); arrow(0, -1); }
+    else if (K === "ArrowDown") { e.preventDefault(); arrow(1, 0); }
+    else if (K === "ArrowUp") { e.preventDefault(); arrow(-1, 0); }
+    else if (K.length === 1) e.preventDefault(); // block digits, spaces, symbols
+  });
+  inp.addEventListener("input", () => { // fallback for mobile keyboards
+    const m = inp.value.replace(/[^a-zA-Z]/g, "");
+    if (!m) { inp.value = ""; progress(); return; }
+    setLetter(m.slice(-1).toUpperCase());
+  });
+});
+
+/* ---------- DIALOG ---------- */
+const dlg = $("dlg");
+function ask(title, text, buttons) {
+  $("dT").textContent = title; $("dP").textContent = text; $("dB").innerHTML = "";
+  buttons.forEach(([label, fn, pri]) => { const b = document.createElement("button"); b.textContent = label; if (pri) b.className = "pri"; b.onclick = () => { dlg.close(); fn && fn(); }; $("dB").appendChild(b); });
+  dlg.showModal();
+}
+
+/* ---------- CONTROLS ---------- */
+function solved(w) { return w.cells.every(k => inputs.get(k).value === sol.get(k)); }
+$("bCheck").onclick = () => {
+  checked = true;
+  inputs.forEach((inp, k) => { const el = cellEls.get(k); el.classList.remove("ok", "bad"); if (inp.value) el.classList.add(inp.value === sol.get(k) ? "ok" : "bad"); });
+  const total = words.filter(solved).length, any = [...inputs.values()].some(i => i.value);
+  if (total === 25) {
+    $("msg").textContent = "Excellent work! You solved all 25 professions.";
+    ask("Congratulations!", "Final score: 25 / 25. You solved the whole crossword.", [["Play again", resetAll, true], ["Close"]]);
+  } else $("msg").textContent = !any ? "Type some letters first, then check your answers."
+    : "Good progress! Review the highlighted squares and try again. (" + total + " / 25 correct)";
+};
+function resetAll() { inputs.forEach(i => i.value = ""); clearMarks(); active = null; cursor = null; $("msg").textContent = ""; progress(); window.scrollTo({top:0,behavior:"smooth"}); }
+$("bReveal").onclick = () => ask("Reveal all answers?", "Your current progress will be replaced by the correct answers.", [["Cancel"], ["Reveal", () => { sol.forEach((l, k) => inputs.get(k).value = l); clearMarks(); $("msg").textContent = "All answers revealed. Press Start Again to practice once more."; progress(); }, true]]);
+$("bReset").onclick = () => ask("Start again?", "All the letters you typed will be erased.", [["Cancel"], ["Start Again", resetAll, true]]);
+progress();
+active = words.find(w => w.num === 1 && w.d === "A") || words[0];
+cursor = active.cells[0]; paint();
+</script>
+</body>
+</html>
